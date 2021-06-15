@@ -70,4 +70,4 @@ At this point you just successfully created a new Virtual Machine as well as the
 ## Additional references
 [Azure REST API references for Compute](https://docs.microsoft.com/en-us/rest/api/compute/virtualmachines/createorupdate)
 
-[Quick Start Guide](QuickStart.md).
+[Quick Start Guide](quickstart.md).
