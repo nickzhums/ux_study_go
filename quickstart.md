@@ -232,35 +232,6 @@ In this example, we will show to manage Network related resources.
 // insert code
 ```
 
-Example: Managing Virtual Machines
----------------------------------
-In this example, we will show how to manage Virtual Machines
-
-***Import the packages***
-```go
-// insert code
-```
-
-***Creating a Virtual Machine***
-```go
-// insert code
-```
-
-***Updating a Virtual Machine***
-```go
-// insert code
-```
-
-***List all Virtual Machines***
-```go
-// insert code
-```
-
-***Delete a Virtual Machine***
-```go
-// insert code
-```
-
 ## Code Samples
 
 More code samples for using the management library for Go SDK can be found in the following locations
