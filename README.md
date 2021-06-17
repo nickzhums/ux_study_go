@@ -1,340 +1,73 @@
+# Create an Azure Virtual Machine
+## Goal
+Your company has entrusted you with creating their first Virtual Machine in Azure from scratch. For this task you are given a blank subscription with no infrastructure at all.
 
-Getting Started - New Azure Go SDK
-=============================================================
+For reference on general information about the SDK, please see the [Quick Start Guide](quickstart.md).
 
-We are excited to announce that a new set of management libraries are
-now production-ready. Those packages share a number of new features
-such as Azure Identity support, HTTP pipeline, error-handling.,etc, and
-they also follow the new Azure SDK guidelines which create easy-to-use
-APIs that are idiomatic, compatible, and dependable.
+## Task description
+In Azure, all resources are grouped in Resource Groups, which allows the users to keep track of which application uses what resources more efficiently. The infrastructure and components needed for a Virtual Machine, and the Virtual Machine itself, must be inside a Resource Group.
 
-You can find the full list of those new libraries
-[here](https://pkg.go.dev/github.com/Azure/azure-sdk-for-go/sdk)
+This task is subdivided in four sections: 
+- Creating a client and authenticate to Azure
+- Creating the network infrastructure first 
+- Create components needed for the Virtual Machine
+- Create the virtual machine
 
-In this basic quickstart guide, we will walk you through how to
-authenticate to Azure and start interacting with Azure resources. There are several possible approaches to
-authentication. This document illustrates the most common scenario.
+### Creating a client and authenticate to Azure
 
-Prerequisites
--------------
+#### Task 1 - Authentication
 
-You will need the following values to authenticate to Azure
+First step is always to authenticate to Azure and create a client to manage resources, please follow the documentation and create your client to access Azure resources.
 
--   **Subscription ID**
--   **Client ID**
--   **Client Secret**
--   **Tenant ID**
+Print out the information of the default Azure subscription.
 
-These values can be obtained from the portal, here's the instructions:
+### Setting up the Network Infrastructure
+For you to succeed in this task, you will first need to implement the network infrastructure needed to create a Virtual Machine:
 
-### Get Subscription ID
+- **[Virtual Networks](https://docs.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview)**: A Virtual Network that connects to the internet where all Subnets live.
 
-1.  Login into your Azure account
-2.  Select Subscriptions in the left sidebar
-3.  Select whichever subscription is needed
-4.  Click on Overview
-5.  Copy the Subscription ID
+- **[Subnets](https://docs.microsoft.com/en-us/azure/virtual-machines/network-overview)**: A Subnet is a range of IP addresses where Virtual Machines live.
 
-### Get Client ID / Client Secret / Tenant ID
+- **[Network Security Groups](https://docs.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview)**: Structure that has different network security rules to filter network traffic, such as open a specific port.
 
-For information on how to get Client ID, Client Secret, and Tenant ID,
-please refer to [this document](https://docs.microsoft.com/azure/active-directory/develop/howto-create-service-principal-portal)
+#### Task 2 - Create a resource group
+First, from your subscription you need to create the Resource Group where all the resources are going to live. Feel free to name the Resource Group however you want but take into account [naming rules and restrictions for Azure Resources](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules). You are also required to provide a location for the Resource Group, for this task, you can use `"westus2"`.
 
-### Setting Environment Variables
+#### Task 3 - Create a virtual network
 
-After you obtained the values, you need to set the following values as
-your environment variables
+Next, you need to create a Virtual Network from the Resource Group, after which you need to add a Subnet in it. When creating the Virtual Network, you can use `10.0.0.0/16` when asked for the CIDR. After that, from that Virtual Network you can create a Subnet where you will use `10.0.0.0/24` for the Subnet CIDR.
 
--   `AZURE_CLIENT_ID`
--   `AZURE_CLIENT_SECRET`
--   `AZURE_TENANT_ID`
--   `AZURE_SUBSCRIPTION_ID`
+#### Task 4 - Create a network security group
 
-To set the following environment variables on your development system:
+Now, it is time to create a Network Security Group (NSG) from the Resource Group. Construct it with a name you like and specify `80` for the port. Opening port 80 in your virtual network will allow HTTP connections from the internet to your Virtual Machine.
 
-Windows (Note: Administrator access is required)
+### Setting up the Virtual Machine components
 
-1.  Open the Control Panel
-2.  Click System Security, then System
-3.  Click Advanced system settings on the left
-4.  Inside the System Properties window, click the Environment
-    Variables… button.
-5.  Click on the property you would like to change, then click the Edit…
-    button. If the property name is not listed, then click the New…
-    button.
+Next, you will be setting up all the components needed for a Virtual Machine:
+- **[Availability Sets](https://docs.microsoft.com/en-us/azure/virtual-machines/availability#availability-sets)**: Virtual Machines uses this structure to provide redundancy and availability.
 
-Linux-based OS :
+- **[Network Interfaces](https://docs.microsoft.com/en-us/azure/virtual-machines/network-overview#network-interfaces)**: A network interface is the interconnection between a Virtual Machine and a Virtual Network. 
 
-    export AZURE_CLIENT_ID="__CLIENT_ID__"
-    export AZURE_CLIENT_SECRET="__CLIENT_SECRET__"
-    export AZURE_TENANT_ID="__TENANT_ID__"
-    export AZURE_SUBSCRIPTION_ID="__SUBSCRIPTION_ID__"
+- **[Public IP Addresses](https://docs.microsoft.com/en-us/azure/virtual-network/public-ip-addresses#:~:text=Public%20IP%20addresses%20enable%20Azure,IP%20assigned%20can%20communicate%20outbound.)**: Public IP addresses enable Azure resources, in this case, the Network Interface, to communicate to Internet.
 
-Install the package
--------------------
+#### Task 5 - Create an availability set
 
-This project uses Go modules for versioning and dependency management.
+Starting with the components, you should create an Availability Set from the Resource Group. You will be asked to provide an SKU Name and a resource name. For this task, you can use `"Aligned"` for the SKU Name and any name you want for the resource name.
 
-As an example, to install the Azure Compute module, you would run :
+#### Task 6 - Create a network interface
 
-```sh
-go get github.com/Azure/azure-sdk-for-go/sdk/compute/armcompute
-```
-We also recommend installing other packages for authentication and core functionalities :
+Now it is time to setup the Network Interface for the Virtual Machine, but first you need to get a new public IP address. Create a new IP address from the Resource Group and name it as you wish. After that, you should be able to create a Network Interface with the public IP address that you just created.
 
-```sh
-go get github.com/Azure/azure-sdk-for-go/sdk/armcore
-go get github.com/Azure/azure-sdk-for-go/sdk/azidentity
-go get github.com/Azure/azure-sdk-for-go/sdk/to
-```
+#### Task 7 - Create a Virtual Machine
 
-Authentication
---------------
+For the last step, you will be able to create a new Virtual Machine. Construct the Virtual Machine using the name of the Virtual Machine, username, and password that you want, as well as the Network Interface ID and the Availability Set data.
 
-Once the environment is setup, all you need to do is to create an authenticated client. Before creating a client, you will first need to authenticate to Azure. In specific, you will need to provide a credential for authenticating with the Azure service.  The `azidentity` module provides facilities for various ways of authenticating with Azure including client/secret, certificate, managed identity, and more.
+### Validating
+Finally, to validate that your Virtual Machine has been successfully created, display the Virtual Machine ID in the console.
 
-Our default option is to use **DefaultAzureCredential** which will make use of the environment variables we have set and take care of the authentication flow for us.
+At this point you just successfully created a new Virtual Machine as well as the whole networking infrastructure that is needed for it and any future Virtual Machine that your company will require. Well done.
 
-```go
-cred, err := azidentity.NewDefaultAzureCredential(nil)
-```
+## Additional references
+[Azure REST API references for Compute](https://docs.microsoft.com/en-us/rest/api/compute/virtualmachines/createorupdate)
 
-For more details on how authentication works in `azidentity`, please see the documentation for `azidentity` at [pkg.go.dev/github.com/Azure/azure-sdk-for-go/sdk/azidentity](https://pkg.go.dev/github.com/Azure/azure-sdk-for-go/sdk/azidentity).
-
-
-Connecting to Azure 
--------------------
-
-Once you have a credential, create a connection to the desired ARM endpoint.  The `armcore` module provides facilities for connecting with ARM endpoints including public and sovereign clouds as well as Azure Stack.
-
-```go
-con := armcore.NewDefaultConnection(cred, nil)
-```
-
-For more information on ARM connections, please see the documentation for `armcore` at [pkg.go.dev/github.com/Azure/azure-sdk-for-go/sdk/armcore](https://pkg.go.dev/github.com/Azure/azure-sdk-for-go/sdk/armcore).
-
-Creating a Resource Management Client
--------------------------------------
-
-Once you have a connection to ARM, you will need to decide what service to use and create a client to connect to that service. In this section, we will use `Compute` as our target service. The Compute modules consist of one or more clients. A client groups a set of related APIs, providing access to its functionality within the specified subscription. You will need to create one or more clients to access the APIs you require using your `armcore.Connection`.
-
-To show an example, we will create a client to manage Virtual Machines. The code to achieve this task would be:
-
-```go
-client := armcompute.NewVirtualMachinesClient(con, "<subscription ID>")
-```
-You can use the same pattern to connect with other Azure services that you are using. For example, in order to manage Virtual Network resources, you would install the Network package and create a `VirtualNetwork` Client:
-
-```go
-client := armnetwork.NewVirtualNetworksClient(acon, "<subscription ID>")
-```
-
-Interacting with Azure Resources
---------------------------------
-
-Now that we are authenticated and have created our sub-resource clients, we can use our client to make API calls. Let's demonstrate management client's usage by showing various concrete examples
-
-Example: Managing Resource Groups
----------------------------------
-In this example, we will show how to manage Resource Groups.
-
-***Import the packages***
-```go
-import "github.com/Azure/azure-sdk-for-go/sdk/resources/armresources"
-```
-
-***Create a resource group***
-
-```go
-func createResourceGroup(connection *armcore.Connection) (armresources.ResourceGroupResponse, error) {
-	rgClient := armresources.NewResourceGroupsClient(connection, subscriptionId)
-
-	param := armresources.ResourceGroup{
-		Location: to.StringPtr(location),
-	}
-
-	return rgClient.CreateOrUpdate(ctx, resourceGroupName, param, nil)
-}
-```
-
-***Update a resource group***
-
-```go
-func updateResourceGroup(connection *armcore.Connection) (armresources.ResourceGroupResponse, error) {
-    rgClient := armresources.NewResourceGroupsClient(connection, subscriptionId)
-    
-    update := armresources.ResourceGroupPatchable{
-        Tags: map[string]*string{
-            "new": to.StringPtr("tag"),
-        },
-    }
-    return rgClient.Update(ctx, resourceGroupName, update, nil)
-}
-```
-
-***List all resource groups***
-
-```go
-func listResourceGroups(connection *armcore.Connection) ([]*armresources.ResourceGroup, error) {
-    rgClient := armresources.NewResourceGroupsClient(connection, subscriptionId)
-    
-    pager := rgClient.List(nil)
-    
-    var resourceGroups []*armresources.ResourceGroup
-    for pager.NextPage(ctx) {
-        resp := pager.PageResponse()
-        if resp.ResourceGroupListResult != nil {
-            resourceGroups = append(resourceGroups, resp.ResourceGroupListResult.Value...)
-        }
-    }
-    return resourceGroups, pager.Err()
-}
-```
-
-***Delete a resource group***
-
-```go
-func deleteResourceGroup(connection *armcore.Connection) error {
-    rgClient := armresources.NewResourceGroupsClient(connection, subscriptionId)
-    
-    poller, err := rgClient.BeginDelete(ctx, resourceGroupName, nil)
-    if err != nil {
-        return err
-    }
-    if _, err := poller.PollUntilDone(ctx, interval); err != nil {
-        return err
-    }
-    return nil
-}
-```
-
-Example: Managing Network Resources
----------------------------------
-In this example, we will show to manage Network related resources.
-
-***Import the packages***
-```go
-import "github.com/Azure/azure-sdk-for-go/sdk/network/armnetwork"
-```
-
-***Creating a Virtual Network***
-```go
-func createVirtualNetwork(connection *armcore.Connection) (armnetwork.VirtualNetworkResponse, error) {
-	vnetClient := armnetwork.NewVirtualNetworksClient(connection, subscriptionId)
-
-	param := armnetwork.VirtualNetwork{
-		Resource: armnetwork.Resource{
-			Location: to.StringPtr(location),
-		},
-		Properties: &armnetwork.VirtualNetworkPropertiesFormat{
-			AddressSpace: &armnetwork.AddressSpace{
-				AddressPrefixes: []*string{
-					to.StringPtr("10.0.0.0/16"),
-				},
-			},
-		},
-	}
-	poller, err := vnetClient.BeginCreateOrUpdate(ctx, resourceGroupName, vnetName, param, nil)
-	if err != nil {
-		return armnetwork.VirtualNetworkResponse{}, err
-	}
-	return poller.PollUntilDone(ctx, interval)
-}
-```
-
-***Deleting a Virtual Network***
-```go
-func deleteVirtualNetwork(connection *armcore.Connection) error {
-	vnetClient := armnetwork.NewVirtualNetworksClient(connection, subscriptionId)
-
-	poller, err := vnetClient.BeginDelete(ctx, resourceGroupName, vnetName, nil)
-	if err != nil {
-		return err
-	}
-	if _, err := poller.PollUntilDone(ctx, interval); err != nil {
-		return err
-	}
-	return nil
-}
-```
-
-***List all Virtual Networks in a Resource Group***
-```go
-func listVirtualNetwork(connection *armcore.Connection) ([]*armnetwork.VirtualNetwork, error) {
-    vnetClient := armnetwork.NewVirtualNetworksClient(connection, subscriptionId)
-    
-    pager := vnetClient.List(resourceGroupName, nil)
-    
-    var virtualNetworks []*armnetwork.VirtualNetwork
-    for pager.NextPage(ctx) {
-        resp := pager.PageResponse()
-        virtualNetworks = append(virtualNetworks, resp.VirtualNetworkListResult.Value...)
-    }
-    
-    return virtualNetworks, pager.Err()
-}
-```
-
-Example: Managing Virtual Machines
----------------------------------
-In this example, we will show how to manage Virtual Machines
-
-***Import the packages***
-```go
-// insert code
-```
-
-***Creating a Virtual Machine***
-```go
-// insert code
-```
-
-***Updating a Virtual Machine***
-```go
-// insert code
-```
-
-***List all Virtual Machines***
-```go
-// insert code
-```
-
-***Delete a Virtual Machine***
-```go
-// insert code
-```
-
-## Code Samples
-
-More code samples for using the management library for Go SDK can be found in the following locations
-- [Go SDK Code Samples](https://github.com/Azure-Samples/azure-sdk-for-go-samples)
-
-Need help?
-----------
-
--   File an issue via [Github
-    Issues](https://github.com/Azure/azure-sdk-for-go/issues)
--   Check [previous
-    questions](https://stackoverflow.com/questions/tagged/azure+go)
-    or ask new ones on StackOverflow using azure and Go tags.
-
-Contributing
-------------
-
-For details on contributing to this repository, see the contributing
-guide.
-
-This project welcomes contributions and suggestions. Most contributions
-require you to agree to a Contributor License Agreement (CLA) declaring
-that you have the right to, and actually do, grant us the rights to use
-your contribution. For details, visit <https://cla.microsoft.com>.
-
-When you submit a pull request, a CLA-bot will automatically determine
-whether you need to provide a CLA and decorate the PR appropriately
-(e.g., label, comment). Simply follow the instructions provided by the
-bot. You will only need to do this once across all repositories using
-our CLA.
-
-This project has adopted the Microsoft Open Source Code of Conduct. For
-more information see the Code of Conduct FAQ or contact
-<opencode@microsoft.com> with any additional questions or comments.
+[Quick Start Guide](quickstart.md).
