@@ -123,9 +123,17 @@ To show an example, we will create a client to manage Virtual Machines. The code
 ```go
 client := armcompute.NewVirtualMachinesClient(con, "<subscription ID>")
 ```
+
+If you are using enviroment variable, you can get the Subscription ID via the following
+
+```go
+subscriptionId := os.Getenv("AZURE_SUBSCRIPTION_ID")
+```
+
 You can use the same pattern to connect with other Azure services that you are using. For example, in order to manage Virtual Network resources, you would install the Network package and create a `VirtualNetwork` Client:
 
 ```go
+subscriptionId := os.Getenv("AZURE_SUBSCRIPTION_ID")
 client := armnetwork.NewVirtualNetworksClient(acon, "<subscription ID>")
 ```
 
