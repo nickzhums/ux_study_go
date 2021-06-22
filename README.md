@@ -19,7 +19,9 @@ This task is subdivided in four sections:
 
 First step is always to authenticate to Azure and create a client to manage resources, please follow the documentation and create your client to access Azure resources.
 
-Print out the information of the default Azure subscription.
+#### Task 2 - Create a resource group
+First, from your subscription you need to create the Resource Group where all the resources are going to live. Feel free to name the Resource Group however you want but take into account [naming rules and restrictions for Azure Resources](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules). You are also required to provide a location for the Resource Group, for this task, you can use `"westus2"`.
+
 
 ### Setting up the Network Infrastructure
 For you to succeed in this task, you will first need to implement the network infrastructure needed to create a Virtual Machine:
@@ -29,9 +31,6 @@ For you to succeed in this task, you will first need to implement the network in
 - **[Subnets](https://docs.microsoft.com/en-us/azure/virtual-machines/network-overview)**: A Subnet is a range of IP addresses where Virtual Machines live.
 
 - **[Network Security Groups](https://docs.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview)**: Structure that has different network security rules to filter network traffic, such as open a specific port.
-
-#### Task 2 - Create a resource group
-First, from your subscription you need to create the Resource Group where all the resources are going to live. Feel free to name the Resource Group however you want but take into account [naming rules and restrictions for Azure Resources](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules). You are also required to provide a location for the Resource Group, for this task, you can use `"westus2"`.
 
 #### Task 3 - Create a virtual network
 
