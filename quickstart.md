@@ -161,7 +161,7 @@ func createResourceGroup(ctx context.Context, connection *armcore.Connection) (a
 		Location: to.StringPtr(location),
 	}
 
-	return rgClient.CreateOrUpdate(context.Backgroud(), resourceGroupName, param, nil)
+	return rgClient.CreateOrUpdate(context.Background(), resourceGroupName, param, nil)
 }
 ```
 
