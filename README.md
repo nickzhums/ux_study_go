@@ -30,34 +30,27 @@ For you to succeed in this task, you will first need to implement the network in
 
 - **[Subnets](https://docs.microsoft.com/en-us/azure/virtual-machines/network-overview)**: A Subnet is a range of IP addresses where Virtual Machines live.
 
-- **[Network Security Groups](https://docs.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview)**: Structure that has different network security rules to filter network traffic, such as open a specific port.
-
 #### Task 3 - Create a virtual network
 
 Next, you need to create a Virtual Network from the Resource Group, after which you need to add a Subnet in it. When creating the Virtual Network, you can use `10.0.0.0/16` when asked for the CIDR. After that, from that Virtual Network you can create a Subnet where you will use `10.0.0.0/24` for the Subnet CIDR.
 
-#### Task 4 - Create a network security group
-
-Now, it is time to create a Network Security Group (NSG) from the Resource Group. Construct it with a name you like and specify `80` for the port. Opening port 80 in your virtual network will allow HTTP connections from the internet to your Virtual Machine.
-
 ### Setting up the Virtual Machine components
 
 Next, you will be setting up all the components needed for a Virtual Machine:
-- **[Availability Sets](https://docs.microsoft.com/en-us/azure/virtual-machines/availability#availability-sets)**: Virtual Machines uses this structure to provide redundancy and availability.
 
 - **[Network Interfaces](https://docs.microsoft.com/en-us/azure/virtual-machines/network-overview#network-interfaces)**: A network interface is the interconnection between a Virtual Machine and a Virtual Network. 
 
 - **[Public IP Addresses](https://docs.microsoft.com/en-us/azure/virtual-network/public-ip-addresses#:~:text=Public%20IP%20addresses%20enable%20Azure,IP%20assigned%20can%20communicate%20outbound.)**: Public IP addresses enable Azure resources, in this case, the Network Interface, to communicate to Internet.
 
-#### Task 5 - Create an availability set
+#### Task 4 - Create an availability set
 
 Starting with the components, you should create an Availability Set from the Resource Group. You will be asked to provide an SKU Name and a resource name. For this task, you can use `"Aligned"` for the SKU Name and any name you want for the resource name.
 
-#### Task 6 - Create a network interface
+#### Task 5 - Create a network interface
 
 Now it is time to setup the Network Interface for the Virtual Machine, but first you need to get a new public IP address. Create a new IP address from the Resource Group and name it as you wish. After that, you should be able to create a Network Interface with the public IP address that you just created.
 
-#### Task 7 - Create a Virtual Machine
+#### Task 6 - Create a Virtual Machine
 
 For the last step, you will be able to create a new Virtual Machine. Construct the Virtual Machine using the name of the Virtual Machine, username, and password that you want, as well as the Network Interface ID and the Availability Set data.
 
