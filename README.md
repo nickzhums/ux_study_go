@@ -42,15 +42,11 @@ Next, you will be setting up all the components needed for a Virtual Machine:
 
 - **[Public IP Addresses](https://docs.microsoft.com/en-us/azure/virtual-network/public-ip-addresses#:~:text=Public%20IP%20addresses%20enable%20Azure,IP%20assigned%20can%20communicate%20outbound.)**: Public IP addresses enable Azure resources, in this case, the Network Interface, to communicate to Internet.
 
-#### Task 4 - Create an availability set
-
-Starting with the components, you should create an Availability Set from the Resource Group. You will be asked to provide an SKU Name and a resource name. For this task, you can use `"Aligned"` for the SKU Name and any name you want for the resource name.
-
-#### Task 5 - Create a network interface
+#### Task 4 - Create a network interface
 
 Now it is time to setup the Network Interface for the Virtual Machine, but first you need to get a new public IP address. Create a new IP address from the Resource Group and name it as you wish. After that, you should be able to create a Network Interface with the public IP address that you just created.
 
-#### Task 6 - Create a Virtual Machine
+#### Task 5 - Create a Virtual Machine
 
 For the last step, you will be able to create a new Virtual Machine. Construct the Virtual Machine using the name of the Virtual Machine, username, and password that you want, as well as the Network Interface ID and the Availability Set data.
 
